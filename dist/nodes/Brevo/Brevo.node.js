@@ -66,6 +66,12 @@ class Brevo {
                         action: 'Add contact to list',
                         description: 'Add existing Brevo contacts to a list',
                     },
+                    {
+                        name: 'Remove Contact From List',
+                        value: 'removeContactFromList',
+                        action: 'Remove contact from list',
+                        description: 'Remove existing Brevo contacts from a list',
+                    },
                 ],
                 default: 'addContactToList',
             },
@@ -81,7 +87,7 @@ class Brevo {
                 displayOptions: {
                     show: {
                         resource: ['contactList'],
-                        operation: ['addContactToList'],
+                        operation: ['addContactToList', 'removeContactFromList'],
                     },
                 },
                 description: 'Brevo contact list ID',
@@ -95,7 +101,7 @@ class Brevo {
                 displayOptions: {
                     show: {
                         resource: ['contactList'],
-                        operation: ['addContactToList'],
+                        operation: ['addContactToList', 'removeContactFromList'],
                     },
                 },
                 options: [
@@ -123,7 +129,7 @@ class Brevo {
                 displayOptions: {
                     show: {
                         resource: ['contactList'],
-                        operation: ['addContactToList'],
+                        operation: ['addContactToList', 'removeContactFromList'],
                     },
                 },
                 options: [
@@ -151,7 +157,7 @@ class Brevo {
                 displayOptions: {
                     show: {
                         resource: ['contactList'],
-                        operation: ['addContactToList'],
+                        operation: ['addContactToList', 'removeContactFromList'],
                         inputMode: ['text'],
                     },
                 },
@@ -175,7 +181,7 @@ class Brevo {
                 displayOptions: {
                     show: {
                         resource: ['contactList'],
-                        operation: ['addContactToList'],
+                        operation: ['addContactToList', 'removeContactFromList'],
                         inputMode: ['fixedCollection'],
                     },
                 },
@@ -205,7 +211,8 @@ class Brevo {
             try {
                 const resource = this.getNodeParameter('resource', itemIndex);
                 const operation = this.getNodeParameter('operation', itemIndex);
-                if (resource !== 'contactList' || operation !== 'addContactToList') {
+                if (resource !== 'contactList' ||
+                    !['addContactToList', 'removeContactFromList'].includes(operation)) {
                     throw new n8n_workflow_1.NodeOperationError(this.getNode(), 'Unsupported Brevo operation.', {
                         itemIndex,
                     });
@@ -228,7 +235,7 @@ class Brevo {
                 if (parsedValues.length === 0) {
                     throw new n8n_workflow_1.NodeOperationError(this.getNode(), 'At least one contact identifier must be provided.', { itemIndex });
                 }
-                const responseData = (await GenericFunctions_1.brevoApiRequest.call(this, 'POST', `/contacts/lists/${listId}/contacts/add`, (0, helpers_1.buildAddContactToListBody)(identifierType, parsedValues)));
+                const responseData = (await GenericFunctions_1.brevoApiRequest.call(this, 'POST', `/contacts/lists/${listId}/contacts/${operation === 'addContactToList' ? 'add' : 'remove'}`, (0, helpers_1.buildContactListMembershipBody)(identifierType, parsedValues)));
                 returnData.push({
                     json: responseData,
                     pairedItem: {

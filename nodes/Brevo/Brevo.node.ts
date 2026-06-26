@@ -9,7 +9,7 @@ import { NodeConnectionTypes, NodeOperationError } from 'n8n-workflow';
 
 import { brevoApiRequest } from './GenericFunctions';
 import {
-	buildAddContactToListBody,
+	buildContactListMembershipBody,
 	type IdentifierType,
 	normalizeIdentifierValues,
 	parseIdentifierValues,
@@ -77,6 +77,12 @@ export class Brevo implements INodeType {
 						action: 'Add contact to list',
 						description: 'Add existing Brevo contacts to a list',
 					},
+					{
+						name: 'Remove Contact From List',
+						value: 'removeContactFromList',
+						action: 'Remove contact from list',
+						description: 'Remove existing Brevo contacts from a list',
+					},
 				],
 				default: 'addContactToList',
 			},
@@ -92,7 +98,7 @@ export class Brevo implements INodeType {
 				displayOptions: {
 					show: {
 						resource: ['contactList'],
-						operation: ['addContactToList'],
+						operation: ['addContactToList', 'removeContactFromList'],
 					},
 				},
 				description: 'Brevo contact list ID',
@@ -106,7 +112,7 @@ export class Brevo implements INodeType {
 				displayOptions: {
 					show: {
 						resource: ['contactList'],
-						operation: ['addContactToList'],
+						operation: ['addContactToList', 'removeContactFromList'],
 					},
 				},
 				options: [
@@ -134,7 +140,7 @@ export class Brevo implements INodeType {
 				displayOptions: {
 					show: {
 						resource: ['contactList'],
-						operation: ['addContactToList'],
+						operation: ['addContactToList', 'removeContactFromList'],
 					},
 				},
 				options: [
@@ -162,7 +168,7 @@ export class Brevo implements INodeType {
 				displayOptions: {
 					show: {
 						resource: ['contactList'],
-						operation: ['addContactToList'],
+						operation: ['addContactToList', 'removeContactFromList'],
 						inputMode: ['text'],
 					},
 				},
@@ -186,7 +192,7 @@ export class Brevo implements INodeType {
 				displayOptions: {
 					show: {
 						resource: ['contactList'],
-						operation: ['addContactToList'],
+						operation: ['addContactToList', 'removeContactFromList'],
 						inputMode: ['fixedCollection'],
 					},
 				},
@@ -219,7 +225,10 @@ export class Brevo implements INodeType {
 				const resource = this.getNodeParameter('resource', itemIndex) as string;
 				const operation = this.getNodeParameter('operation', itemIndex) as string;
 
-				if (resource !== 'contactList' || operation !== 'addContactToList') {
+				if (
+					resource !== 'contactList' ||
+					!['addContactToList', 'removeContactFromList'].includes(operation)
+				) {
 					throw new NodeOperationError(this.getNode(), 'Unsupported Brevo operation.', {
 						itemIndex,
 					});
@@ -257,8 +266,10 @@ export class Brevo implements INodeType {
 				const responseData = (await brevoApiRequest.call(
 					this,
 					'POST',
-					`/contacts/lists/${listId}/contacts/add`,
-					buildAddContactToListBody(identifierType, parsedValues),
+					`/contacts/lists/${listId}/contacts/${
+						operation === 'addContactToList' ? 'add' : 'remove'
+					}`,
+					buildContactListMembershipBody(identifierType, parsedValues),
 				)) as IDataObject;
 
 				returnData.push({

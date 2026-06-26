@@ -28,7 +28,7 @@ export function normalizeIdentifierValues(
 	});
 }
 
-export function buildAddContactToListBody(
+export function buildContactListMembershipBody(
 	identifierType: IdentifierType,
 	values: Array<string | number>,
 ): IDataObject {

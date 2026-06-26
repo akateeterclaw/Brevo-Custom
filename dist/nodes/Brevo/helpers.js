@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.parseIdentifierValues = parseIdentifierValues;
 exports.normalizeIdentifierValues = normalizeIdentifierValues;
-exports.buildAddContactToListBody = buildAddContactToListBody;
+exports.buildContactListMembershipBody = buildContactListMembershipBody;
 exports.normalizeBrevoWebhookPayload = normalizeBrevoWebhookPayload;
 function parseIdentifierValues(values, identifierType) {
     const parsedValues = values
@@ -23,7 +23,7 @@ function normalizeIdentifierValues(values, identifierType) {
         return parsed;
     });
 }
-function buildAddContactToListBody(identifierType, values) {
+function buildContactListMembershipBody(identifierType, values) {
     return {
         [identifierType]: values,
     };

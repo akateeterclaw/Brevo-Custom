@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-	buildAddContactToListBody,
+	buildContactListMembershipBody,
 	normalizeBrevoWebhookPayload,
 	normalizeIdentifierValues,
 	parseIdentifierValues,
@@ -12,7 +12,7 @@ describe('Brevo helper functions', () => {
 		const values = parseIdentifierValues('jeff32@example.com, jim56@example.com\nsam@example.com', 'emails');
 
 		expect(values).toEqual(['jeff32@example.com', 'jim56@example.com', 'sam@example.com']);
-		expect(buildAddContactToListBody('emails', values)).toEqual({
+		expect(buildContactListMembershipBody('emails', values)).toEqual({
 			emails: ['jeff32@example.com', 'jim56@example.com', 'sam@example.com'],
 		});
 	});
@@ -21,7 +21,7 @@ describe('Brevo helper functions', () => {
 		const values = parseIdentifierValues('123, 456\n789', 'ids');
 
 		expect(values).toEqual([123, 456, 789]);
-		expect(buildAddContactToListBody('ids', values)).toEqual({
+		expect(buildContactListMembershipBody('ids', values)).toEqual({
 			ids: [123, 456, 789],
 		});
 	});
@@ -30,7 +30,7 @@ describe('Brevo helper functions', () => {
 		const values = parseIdentifierValues('customer-1\ncustomer-2', 'extIds');
 
 		expect(values).toEqual(['customer-1', 'customer-2']);
-		expect(buildAddContactToListBody('extIds', values)).toEqual({
+		expect(buildContactListMembershipBody('extIds', values)).toEqual({
 			extIds: ['customer-1', 'customer-2'],
 		});
 	});
