@@ -1,0 +1,60 @@
+{
+	"name": "n8n-nodes-brevo-custom",
+	"version": "0.1.0",
+	"description": "Custom n8n community nodes for Brevo contact webhooks and list membership actions.",
+	"license": "MIT",
+	"homepage": "https://github.com/akateeterclaw/Brevo-Custom",
+	"author": {
+		"name": "Jeremy Teeter",
+		"email": "akateeterclaw@gmail.com"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/akateeterclaw/Brevo-Custom.git"
+	},
+	"bugs": {
+		"url": "https://github.com/akateeterclaw/Brevo-Custom/issues"
+	},
+	"keywords": [
+		"n8n-community-node-package",
+		"n8n",
+		"brevo",
+		"sendinblue",
+		"automation"
+	],
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"files": [
+		"dist",
+		"README.md",
+		"LICENSE"
+	],
+	"scripts": {
+		"build": "tsc -p tsconfig.build.json && node scripts/copy-assets.mjs",
+		"dev": "n8n-node dev",
+		"lint": "n8n-node lint && tsc --noEmit -p tsconfig.json",
+		"test": "vitest run",
+		"release": "npm version patch"
+	},
+	"n8n": {
+		"n8nNodesApiVersion": 1,
+		"credentials": [
+			"dist/credentials/BrevoApi.credentials.js"
+		],
+		"nodes": [
+			"dist/nodes/Brevo/Brevo.node.js",
+			"dist/nodes/BrevoTrigger/BrevoTrigger.node.js"
+		]
+	},
+	"devDependencies": {
+		"@n8n/node-cli": "^0.36.2",
+		"@types/node": "^22.19.0",
+		"n8n-core": "^2.16.1",
+		"n8n-workflow": "^2.16.0",
+		"typescript": "^5.9.3",
+		"vitest": "^4.0.15"
+	},
+	"peerDependencies": {
+		"n8n-workflow": "*"
+	}
+}
